@@ -79,7 +79,12 @@ Dermatological condition diagnosis from skin lesion imagery often suffers from h
 ├── Skin_Disease_Classification_Project_Documentation_JGEC.docx
 └── README.md
 ```
+## Datasets 
+```
+https://share.google/BKuGoG9tJ6k4HAIBd
+```
 ### Setup & Installation
 
 ```bash
 pip install torch torchvision timm albumentations opencv-python pandas numpy scikit-learn
+

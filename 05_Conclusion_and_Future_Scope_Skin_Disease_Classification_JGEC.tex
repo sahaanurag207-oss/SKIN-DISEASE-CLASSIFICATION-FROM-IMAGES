@@ -1,0 +1,54 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{margin=0.9in}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\definecolor{primary}{HTML}{1B365D}
+\definecolor{accent}{HTML}{2B6CB0}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primary,
+    urlcolor=accent,
+    pdftitle={Section 05: Conclusion & Future Scope},
+    pdfauthor={Anurag Saha, Ayan Karak}
+}
+
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{\color{primary} JALPAIGURI GOVERNMENT ENGINEERING COLLEGE (JGEC)}}\\[0.3em]
+    {\normalsize Department of Information Technology $\bullet$ 5th Semester Official Project Documentation}\\[1em]
+    \rule{\linewidth}{1.5pt}\\[0.5em]
+    {\LARGE \textbf{AUTOMATED SKIN DISEASE CLASSIFICATION USING DEEP LEARNING}}\\[0.3em]
+    {\large \textit{Section 05: Conclusion, Acknowledgment \& Future Scope}}\\[0.3em]
+    \rule{\linewidth}{1.5pt}\\[0.8em]
+    \textbf{Submitted by:} Anurag Saha (Roll No: \texttt{24101106037}) \& Ayan Karak (Roll No: \texttt{24101106013})\\[0.3em]
+    \textbf{Submitted to \& Supervised by:} Dr. Somnath Dhibar\\[0.3em]
+    \textbf{Source Code Repository:} \url{https://github.com/sahaanurag207-oss/SKIN-DISEASE-CLASSIFICATION-FROM-IMAGES}
+\end{center}
+
+\vspace{0.8em}
+
+\section{Conclusion, Acknowledgment \& Future Scope}
+\subsection{Conclusion}
+This project successfully designs, implements, and validates an automated deep learning pipeline for seven-class dermatoscopic skin disease classification using the HAM10000 benchmark. By replacing naive image-level splitting with lesion-grouped \texttt{StratifiedGroupKFold} validation, the study establishes an honest, leakage-free evaluation protocol suitable for clinical decision-support research.
+
+Leveraging a pretrained ConvNeXt-Small backbone combined with domain-tailored Albumentations, Label Smoothing Cross-Entropy, AdamW optimization with Cosine Annealing, PyTorch Automatic Mixed Precision, and multi-view Test-Time Augmentation, the model attains 87.98\% Overall Test Accuracy, 0.8761 Weighted F1-Score, and 0.7534 Macro F1-Score. Notably, the architecture demonstrates strong discriminative capability on both high-prevalence benign nevi ($\text{F1} = 0.9565$) and critical low-sample malignancies such as basal cell carcinoma (97.44\% recall), confirming the efficacy of modernized convolutional architectures in medical image analysis.
+
+\subsection{Acknowledgment}
+We extend our sincere gratitude to \textbf{Dr. Somnath Dhibar}, Department of Information Technology, Jalpaiguri Government Engineering College (JGEC), for his invaluable mentorship, academic guidance, and hands-on support throughout the conceptualization, implementation, and validation of this project.
+
+\subsection{Limitations \& Future Scope of Research}
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Cost-Sensitive \& Focal Loss Optimization for Melanoma Sensitivity:} To elevate recall on high-risk malignant classes (\texttt{mel} at 55.24\% and \texttt{akiec} at 50.00\%), future iterations will integrate Class-Balanced Focal Loss, LDAM (Label-Distribution-Aware Margin) loss, and post-hoc ROC threshold tuning to prioritize clinical sensitivity over raw accuracy.
+    \item \textbf{Multimodal Patient Metadata Fusion:} HAM10000 provides clinical covariates including patient age, biological sex, and anatomical lesion localization. Fusing tabular metadata embeddings with ConvNeXt visual features via cross-attention layers can disambiguate visually similar lesions (e.g., sun-exposed actinic keratoses vs. benign keratoses).
+    \item \textbf{Explainable AI (XAI) for Clinical Trust:} Integrating Grad-CAM++ and Eigen-CAM visual saliency overlays will highlight the exact dermatoscopic structures (pigment networks, blue-white veils, arborizing vessels) driving each prediction, enabling transparent clinician verification.
+    \item \textbf{Multi-Model Ensembling \& Edge Deployment:} Combining ConvNeXt-Small with Swin Transformer and EfficientNetV2 backbones via out-of-fold probability ensembling, followed by ONNX/TensorRT quantization and a web/mobile diagnostic interface, will enable real-time teledermatology screening in resource-constrained healthcare centers.
+\end{enumerate}
+
+\end{document}

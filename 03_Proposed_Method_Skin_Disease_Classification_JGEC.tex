@@ -1,0 +1,94 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{margin=0.9in}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\definecolor{primary}{HTML}{1B365D}
+\definecolor{accent}{HTML}{2B6CB0}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primary,
+    urlcolor=accent,
+    pdftitle={Section 03: Proposed Methodology & System Architecture},
+    pdfauthor={Anurag Saha, Ayan Karak}
+}
+
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{\color{primary} JALPAIGURI GOVERNMENT ENGINEERING COLLEGE (JGEC)}}\\[0.3em]
+    {\normalsize Department of Information Technology $\bullet$ 5th Semester Official Project Documentation}\\[1em]
+    \rule{\linewidth}{1.5pt}\\[0.5em]
+    {\LARGE \textbf{AUTOMATED SKIN DISEASE CLASSIFICATION USING DEEP LEARNING}}\\[0.3em]
+    {\large \textit{Section 03: Proposed Methodology \& System Architecture}}\\[0.3em]
+    \rule{\linewidth}{1.5pt}\\[0.8em]
+    \textbf{Submitted by:} Anurag Saha (Roll No: \texttt{24101106037}) \& Ayan Karak (Roll No: \texttt{24101106013})\\[0.3em]
+    \textbf{Submitted to \& Supervised by:} Dr. Somnath Dhibar\\[0.3em]
+    \textbf{Source Code Repository:} \url{https://github.com/sahaanurag207-oss/SKIN-DISEASE-CLASSIFICATION-FROM-IMAGES}
+\end{center}
+
+\vspace{0.8em}
+
+\section{Proposed Methodology \& System Architecture}
+The proposed system---designed and implemented with guidance from \textbf{Dr. Somnath Dhibar}---follows a modular, end-to-end deep learning workflow engineered specifically to address visual intra-class variability, severe class skewness (58:1 ratio between majority \texttt{nv} and minority \texttt{df} classes), and strict patient/lesion-level generalization.
+
+\subsection{End-to-End Pipeline Architecture}
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{l l X}
+\toprule
+\textbf{Pipeline Stage} & \textbf{Component / Algorithm} & \textbf{Technical Configuration \& Purpose} \\
+\midrule
+1. Metadata \& Leakage Control & \texttt{StratifiedGroupKFold} (\texttt{scikit-learn}) & Groups all 10,015 images by unique \texttt{lesion\_id} while preserving class proportions; guarantees zero physical lesion overlap across train, validation, and test splits (Test $n = 1,023$). \\
+2. Spatial \& Photometric Augmentation & Albumentations \& OpenCV & Applies stochastic \texttt{HorizontalFlip}, \texttt{VerticalFlip}, \texttt{RandomRotate90}, \texttt{ShiftScaleRotate}, and \texttt{ColorJitter} during training to simulate dermatoscope orientation and illumination shifts. \\
+3. Feature Extraction Backbone & ConvNeXt-Small (\texttt{timm}) & Loads \texttt{convnext\_small.fb\_in22k\_ft\_in1k} pretrained on ImageNet-22k and fine-tuned on ImageNet-1k, leveraging $7\times 7$ depthwise convolutions for multi-scale lesion border and pigment network extraction. \\
+4. Regularized Classifier Head & Custom Dropout + Linear Layer & Applies Dropout ($p = 0.3$) before the 7-class linear projection head to mitigate co-adaptation and overfitting on minority classes. \\
+5. Loss \& Optimization & Label Smoothing CE + AdamW + \texttt{CosineAnnealingLR} & Label smoothing ($\epsilon = 0.1$) softens hard targets to prevent overconfident logits; AdamW decouples weight decay under a smooth cosine learning rate decay schedule. \\
+6. Precision Acceleration & PyTorch AMP (\texttt{autocast} + \texttt{GradScaler}) & Executes forward/backward passes in FP16 mixed precision with dynamic gradient scaling, reducing GPU memory footprint and accelerating convergence. \\
+7. Inference Enhancement & Multi-View Test-Time Augmentation (TTA) & Evaluates each test image across original, horizontally flipped, and vertically flipped views, averaging softmax probability distributions for variance reduction. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Mathematical Formulation of Core Components}
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Leak-Free Lesion Partitioning:} Let $\mathcal{G}$ denote the set of unique lesion identifiers (\texttt{lesion\_id}) in HAM10000 and $g(x)$ map image $x$ to its physical lesion. \texttt{StratifiedGroupKFold} constructs disjoint lesion subsets $\mathcal{G}_{\text{train}}$, $\mathcal{G}_{\text{val}}$, and $\mathcal{G}_{\text{test}}$ such that $\mathcal{G}_{\text{train}} \cap \mathcal{G}_{\text{test}} = \emptyset$ and $\mathcal{G}_{\text{val}} \cap \mathcal{G}_{\text{test}} = \emptyset$, strictly enforcing that no diagnostic view of a test lesion is ever observed during optimization.
+    \item \textbf{ConvNeXt Inverted Bottleneck Block:} Each ConvNeXt stage processes feature maps via a $7\times 7$ depthwise convolution followed by Layer Normalization, a $1\times 1$ pointwise expansion ($4\times$ channel width), GELU non-linearity, and a $1\times 1$ pointwise projection with residual connection, capturing both fine pigment granules and global lesion asymmetry.
+    \item \textbf{Label Smoothing Cross-Entropy Objective:} Given ground-truth class $y \in \{1, \dots, K\}$ ($K = 7$) and smoothing parameter $\epsilon = 0.1$, smoothed target probabilities are defined as:
+    \begin{equation}
+        q_k = \begin{cases} 1 - \epsilon, & \text{if } k = y \\ \dfrac{\epsilon}{K - 1} = \dfrac{0.1}{6}, & \text{if } k \neq y \end{cases}, \qquad \mathcal{L} = -\sum_{k=1}^{K} q_k \log(p_k)
+    \end{equation}
+    which penalizes extreme logit magnitudes and improves calibration on visually ambiguous lesions.
+    \item \textbf{Test-Time Augmentation (TTA) Aggregation:} For each test sample $x_i$, deterministic geometric transforms $\mathcal{T} = \{\text{Identity}, \text{HorizontalFlip}, \text{VerticalFlip}\}$ are applied. The final posterior probability vector is computed as:
+    \begin{equation}
+        P_{\text{final}}(y \mid x_i) = \frac{1}{|\mathcal{T}|} \sum_{t \in \mathcal{T}} \text{Softmax}\big(f_\theta(t(x_i))\big)
+    \end{equation}
+    stabilizing boundary predictions.
+\end{enumerate}
+
+\subsection{Software \& Technology Stack}
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{l l X}
+\toprule
+\textbf{Layer} & \textbf{Libraries / Frameworks} & \textbf{Role in Implementation} \\
+\midrule
+Core Runtime & Python 3.10+ & Primary programming environment \\
+Deep Learning \& Models & PyTorch, Torchvision, \texttt{timm} & Model instantiation (\texttt{convnext\_small.fb\_in22k\_ft\_in1k}), AMP training, TTA \\
+Computer Vision & Albumentations, OpenCV (\texttt{cv2}) & High-speed image loading, resizing, and affine/color augmentations \\
+Data \& Evaluation & NumPy, Pandas, Scikit-learn & Metadata grouping, \texttt{StratifiedGroupKFold}, classification reports, metrics \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\end{document}

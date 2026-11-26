@@ -1,0 +1,86 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{margin=0.9in}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\definecolor{primary}{HTML}{1B365D}
+\definecolor{accent}{HTML}{2B6CB0}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primary,
+    urlcolor=accent,
+    pdftitle={Section 01: Executive Summary & Project Overview},
+    pdfauthor={Anurag Saha, Ayan Karak}
+}
+
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{\color{primary} JALPAIGURI GOVERNMENT ENGINEERING COLLEGE (JGEC)}}\\[0.3em]
+    {\normalsize Department of Information Technology $\bullet$ 5th Semester Official Project Documentation}\\[1em]
+    \rule{\linewidth}{1.5pt}\\[0.5em]
+    {\LARGE \textbf{AUTOMATED SKIN DISEASE CLASSIFICATION USING DEEP LEARNING}}\\[0.3em]
+    {\large \textit{Section 01: Executive Summary \& Project Overview}}\\[0.3em]
+    \rule{\linewidth}{1.5pt}\\[0.8em]
+    \textbf{Submitted by:} Anurag Saha (Roll No: \texttt{24101106037}) \& Ayan Karak (Roll No: \texttt{24101106013})\\[0.3em]
+    \textbf{Submitted to \& Supervised by:} Dr. Somnath Dhibar\\[0.3em]
+    \textbf{Source Code Repository:} \url{https://github.com/sahaanurag207-oss/SKIN-DISEASE-CLASSIFICATION-FROM-IMAGES}
+\end{center}
+
+\vspace{0.8em}
+
+\section{Executive Summary \& Project Overview}
+Skin cancer and dermatological disorders represent a major global public health challenge, where early and accurate visual screening directly dictates clinical prognosis and survival rates. Traditional dermatoscopic examination relies heavily on specialized clinical expertise and suffers from substantial inter-observer variability due to high visual similarity across benign and malignant pigmented lesions. Developed as an official 5th Semester curriculum project in the Department of Information Technology at Jalpaiguri Government Engineering College (JGEC) under the guidance of \textbf{Dr. Somnath Dhibar}, this study presents an end-to-end, leakage-free deep learning framework for multi-class automated skin lesion classification.
+
+The system is trained and rigorously evaluated on the benchmark \textbf{HAM10000} (``Human Against Machine with 10000 training images'') dataset curated by Tschandl et al., encompassing 10,015 dermatoscopic images distributed across seven distinct diagnostic categories. To overcome two pervasive pitfalls in medical computer vision---extreme class imbalance and patient-level data leakage---the pipeline integrates \texttt{StratifiedGroupKFold} partitioning grouped strictly by unique lesion identifiers (\texttt{lesion\_id}), a modernized ConvNeXt-Small backbone (\texttt{convnext\_small.fb\_in22k\_ft\_in1k}) pretrained on ImageNet-22k, domain-specific geometric and photometric Albumentations, Label Smoothing Cross-Entropy regularization, and multi-view Test-Time Augmentation (TTA).
+
+\subsection*{Core Experimental Achievement}
+On the strictly unseen, lesion-disjoint test partition ($n = 1,023$ images), the proposed ConvNeXt-Small + TTA pipeline achieves an \textbf{Overall Test Accuracy of 87.98\%}, a \textbf{Weighted Average F1-Score of 0.8761}, a \textbf{Macro Average F1-Score of 0.7534}, and a \textbf{Balanced Accuracy of 74.76\%}, notably reaching \textbf{97.44\% sensitivity (recall)} on Basal Cell Carcinoma (\texttt{bcc}) and \textbf{95.65\% F1-score} on Melanocytic Nevi (\texttt{nv}).
+
+\subsection{Project Metadata \& Academic Identification}
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{>{\bfseries}l X}
+\toprule
+Attribute & Specification \\
+\midrule
+Project Title & Automated Skin Disease Classification Using Deep Learning \\
+Institution & Jalpaiguri Government Engineering College (JGEC), West Bengal, India \\
+Department \& Semester & Department of Information Technology --- 5th Semester Curriculum Project \\
+Student Investigators & Anurag Saha (Roll No: 24101106037) \& Ayan Karak (Roll No: 24101106013) \\
+Submitted To / Supervisor & Dr. Somnath Dhibar \\
+Primary Dataset & HAM10000 (10,015 Dermatoscopic Images across 7 Diagnostic Classes) \\
+Core Architecture & ConvNeXt-Small (\texttt{convnext\_small.fb\_in22k\_ft\_in1k}) via PyTorch \& \texttt{timm} \\
+Validation Strategy & Leak-Free \texttt{StratifiedGroupKFold} Grouped by \texttt{lesion\_id} \\
+Repository Source & \url{https://github.com/sahaanurag207-oss/SKIN-DISEASE-CLASSIFICATION-FROM-IMAGES} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Target Dermatological Diagnostic Taxonomy (HAM10000)}
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{l l X r r}
+\toprule
+\textbf{Code} & \textbf{Diagnostic Category} & \textbf{Clinical Nature} & \textbf{Total} & \textbf{Test} \\
+\midrule
+\texttt{nv} & Melanocytic nevi & Benign melanocytic proliferation & 6,705 (66.95\%) & 684 \\
+\texttt{mel} & Melanoma & Malignant melanocytic neoplasm (high lethality) & 1,113 (11.11\%) & 105 \\
+\texttt{bkl} & Benign keratosis-like lesions & Benign (seborrheic keratoses, solar lentigo) & 1,099 (10.97\%) & 130 \\
+\texttt{bcc} & Basal cell carcinoma & Malignant epithelial skin cancer & 514 (5.13\%) & 39 \\
+\texttt{akiec} & Actinic keratoses \& IEC & Pre-malignant / in-situ squamous carcinoma & 327 (3.27\%) & 28 \\
+\texttt{vasc} & Vascular lesions & Benign/reactive angiomas \& angiokeratomas & 142 (1.42\%) & 16 \\
+\texttt{df} & Dermatofibroma & Benign fibrous cutaneous nodule & 115 (1.15\%) & 21 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\end{document}

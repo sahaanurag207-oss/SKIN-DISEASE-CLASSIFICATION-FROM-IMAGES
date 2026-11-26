@@ -1,0 +1,22 @@
+# Core Deep Learning Framework (Install PyTorch with matching CUDA version from pytorch.org)
+torch>=2.1.0
+torchvision>=0.16.0
+
+# Pretrained Vision Backbones
+timm>=0.9.12
+
+# Image Processing & Data Augmentation
+albumentations>=1.3.1
+opencv-python>=4.8.0,<4.11.0
+Pillow>=10.0.0
+
+# Scientific Computing & Data Manipulation (Pinned <2.0 for OpenCV/Albumentations compatibility)
+numpy>=1.24.0,<2.0.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+
+# Visualization & Notebook Environment
+matplotlib>=3.7.0
+seaborn>=0.12.2
+jupyter>=1.0.0
+tqdm>=4.65.0

@@ -1,0 +1,85 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{margin=0.9in}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\definecolor{primary}{HTML}{1B365D}
+\definecolor{accent}{HTML}{2B6CB0}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primary,
+    urlcolor=accent,
+    pdftitle={Section 04: Performance Chart & Quantitative Analysis},
+    pdfauthor={Anurag Saha, Ayan Karak}
+}
+
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{\color{primary} JALPAIGURI GOVERNMENT ENGINEERING COLLEGE (JGEC)}}\\[0.3em]
+    {\normalsize Department of Information Technology $\bullet$ 5th Semester Official Project Documentation}\\[1em]
+    \rule{\linewidth}{1.5pt}\\[0.5em]
+    {\LARGE \textbf{AUTOMATED SKIN DISEASE CLASSIFICATION USING DEEP LEARNING}}\\[0.3em]
+    {\large \textit{Section 04: Performance Chart \& Quantitative Analysis}}\\[0.3em]
+    \rule{\linewidth}{1.5pt}\\[0.8em]
+    \textbf{Submitted by:} Anurag Saha (Roll No: \texttt{24101106037}) \& Ayan Karak (Roll No: \texttt{24101106013})\\[0.3em]
+    \textbf{Submitted to \& Supervised by:} Dr. Somnath Dhibar\\[0.3em]
+    \textbf{Source Code Repository:} \url{https://github.com/sahaanurag207-oss/SKIN-DISEASE-CLASSIFICATION-FROM-IMAGES}
+\end{center}
+
+\vspace{0.8em}
+
+\section{Performance Chart \& Quantitative Analysis}
+To ensure clinical validity without data leakage, model evaluation was conducted exclusively on the held-out lesion-disjoint test partition comprising 1,023 dermatoscopic images across all seven diagnostic classes. Performance is assessed using both sample-weighted metrics (reflecting overall diagnostic accuracy) and macro-averaged / balanced metrics (weighting rare and common pathologies equally).
+
+\subsection{Overall Aggregate Evaluation Metrics}
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{l c X}
+\toprule
+\textbf{Evaluation Metric} & \textbf{Score} & \textbf{Analytical Interpretation} \\
+\midrule
+\textbf{Overall Test Accuracy} & \textbf{87.98\%} & High global classification correctness across 1,023 unseen lesion images. \\
+\textbf{Weighted Average F1-Score} & \textbf{0.8761} & Strong precision-recall harmonic balance proportional to clinical prevalence. \\
+\textbf{Macro Average F1-Score} & \textbf{0.7534} & Robust unweighted performance across both majority and rare ($<2\%$) classes. \\
+\textbf{Balanced Accuracy} & \textbf{74.76\%} & Mean per-class recall across all 7 categories despite a 58:1 dataset imbalance. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Per-Class Precision, Recall, and F1-Score Breakdown}
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{l X c c c r}
+\toprule
+\textbf{Class} & \textbf{Diagnostic Name} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Test Support} \\
+\midrule
+\texttt{nv} & Melanocytic nevi & 0.9483 & 0.9649 & 0.9565 & 684 \\
+\texttt{mel} & Melanoma & 0.7160 & 0.5524 & 0.6237 & 105 \\
+\texttt{bkl} & Benign keratosis-like lesions & 0.7518 & 0.7923 & 0.7715 & 130 \\
+\texttt{bcc} & Basal cell carcinoma & 0.6786 & 0.9744 & 0.8000 & 39 \\
+\texttt{akiec} & Actinic keratoses \& intraepithelial carcinoma & 0.6667 & 0.5000 & 0.5714 & 28 \\
+\texttt{vasc} & Vascular lesions & 0.7333 & 0.6875 & 0.7097 & 16 \\
+\texttt{df} & Dermatofibroma & 0.9412 & 0.7619 & 0.8421 & 21 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Diagnostic Error \& Class Imbalance Insights}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{High-Sensitivity Malignancy Screening (\texttt{bcc}):} Basal cell carcinoma achieved an exceptional Recall of 97.44\% ($\text{F1} = 0.8000$) despite having only 39 test samples, demonstrating that ConvNeXt's $7\times 7$ depthwise receptive fields effectively capture telangiectatic vessels and pearly borders.
+    \item \textbf{Distinct Morphological Recognition in Rare Classes (\texttt{df} \& \texttt{vasc}):} Dermatofibroma ($n = 21$) achieved 94.12\% Precision and 0.8421 F1-Score, while Vascular lesions ($n = 16$) reached 0.7097 F1-Score, confirming strong feature transfer from ImageNet-22k weights even under extreme sample scarcity.
+    \item \textbf{Melanoma vs. Nevi Visual Overlap (\texttt{mel}):} Melanoma recorded 71.60\% Precision and 55.24\% Recall ($\text{F1} = 0.6237$). In dermatoscopy, early-stage melanoma shares significant pigment network symmetry with atypical melanocytic nevi (\texttt{nv}), causing borderline cases to default toward the dominant \texttt{nv} prior (66.95\% of dataset).
+    \item \textbf{Pre-Malignant Boundary Ambiguity (\texttt{akiec}):} Actinic keratoses ($n = 28$) yielded an F1-Score of 0.5714 (Precision 66.67\%, Recall 50.00\%), attributable to subtle scaly surface textures that visually overlap with benign keratosis-like lesions (\texttt{bkl}, $\text{F1} = 0.7715$).
+\end{itemize}
+
+\end{document}

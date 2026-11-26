@@ -4,14 +4,14 @@ A deep learning project developed for the **5th Semester Curriculum** focusing o
 
 ---
 
-## 👥 Authors & Academic Details
+## 👨‍🎓 Authors & Academic Details
 
 * **Anurag Saha** — Roll No: `24101106037`
 * **Ayan Karak** — Roll No: `24101106013`
 
 ---
 
-## 📌 Project Overview
+## 📊 Project Overview
 
 Dermatological condition diagnosis from skin lesion imagery often suffers from high visual ambiguity and severe inter-class imbalance. This project implements an end-to-end computer vision pipeline trained on the **HAM10000** dataset to categorize skin lesions into seven distinct diagnostic classes.
 
@@ -26,7 +26,7 @@ Dermatological condition diagnosis from skin lesion imagery often suffers from h
 
 ---
 
-## 🚀 Key Technical Highlights
+## 🧠 Key Technical Highlights
 
 * **Leak-Free Data Splitting:** Implemented `StratifiedGroupKFold` grouped by patient lesion ID (`lesion_id`). This guarantees that multiple images of the same lesion never cross between the training, validation, and test partitions.
 * **Architecture:** Utilized `convnext_small.fb_in22k_ft_in1k` pretrained via `timm` with custom dropout (`p=0.3`) for robust feature representation.
@@ -39,7 +39,7 @@ Dermatological condition diagnosis from skin lesion imagery often suffers from h
 
 ---
 
-## 📊 Experimental Results
+## 📈 Experimental Results
 
 ### Overall Test Performance
 
@@ -47,8 +47,8 @@ Dermatological condition diagnosis from skin lesion imagery often suffers from h
 | :--- | :--- |
 | **Overall Test Accuracy** | **87.98%** |
 | **Balanced Accuracy** | **74.76%** |
-| **Macro Average F1-Score** | **0.7536** |
-| **Weighted Average F1-Score**| **0.8761** |
+| **Macro Average F1-Score** | **0.7534** |
+| **Weighted Average F1-Score** | **0.8761** |
 
 ### Per-Class Classification Report
 
@@ -58,9 +58,25 @@ Dermatological condition diagnosis from skin lesion imagery often suffers from h
 | **mel** | 0.7160 | 0.5524 | 0.6237 | 105 |
 | **bkl** | 0.7518 | 0.7923 | 0.7715 | 130 |
 | **bcc** | 0.6786 | 0.9744 | 0.8000 | 39 |
-| **akiec**| 0.6667 | 0.5000 | 0.5714 | 28 |
+| **akiec** | 0.6667 | 0.5000 | 0.5714 | 28 |
 | **vasc** | 0.7333 | 0.6875 | 0.7097 | 16 |
 | **df** | 0.9412 | 0.7619 | 0.8421 | 21 |
+
+### Performance Charts
+
+#### Aggregate Metrics
+
+![Aggregate performance metrics](Performance_Charts/chart_aggregate_metrics.png)
+
+#### Per-Class Metrics
+
+![Per-class precision, recall, F1-score, and support](Performance_Charts/chart_per_class_metrics.png)
+
+#### Class Imbalance vs. F1-Score
+
+![Relationship between class support and F1-score](Performance_Charts/chart_imbalance_vs_f1.png)
+
+> Additional report and chart details are available in [`04_Performance_Chart_Analysis_Skin_Disease_Classification_JGEC.docx`](04_Performance_Chart_Analysis_Skin_Disease_Classification_JGEC.docx).
 
 ---
 
@@ -76,15 +92,21 @@ Dermatological condition diagnosis from skin lesion imagery often suffers from h
 
 ```text
 ├── skin.ipynb
-├── Skin_Disease_Classification_Project_Documentation_JGEC.docx
+├── 04_Performance_Chart_Analysis_Skin_Disease_Classification_JGEC.docx
+├── Performance_Charts/
+│   ├── chart_aggregate_metrics.png
+│   ├── chart_per_class_metrics.png
+│   └── chart_imbalance_vs_f1.png
 └── README.md
 ```
+
 ## Datasets 
 ```
 https://share.google/BKuGoG9tJ6k4HAIBd
 ```
+
 ### Setup & Installation
 
 ```bash
 pip install torch torchvision timm albumentations opencv-python pandas numpy scikit-learn
-
+```

@@ -6,8 +6,8 @@ A deep learning project developed for the **5th Semester Curriculum** focusing o
 
 ## 👨‍🎓 Authors & Academic Details
 
-* **Anurag Saha** — Roll No: `24101106037`
-* **Ayan Karak** — Roll No: `24101106013`
+- **Anurag Saha** — Roll No: `24101106037`
+- **Ayan Karak** — Roll No: `24101106013`
 
 ---
 
@@ -28,14 +28,14 @@ Dermatological condition diagnosis from skin lesion imagery often suffers from h
 
 ## 🧠 Key Technical Highlights
 
-* **Leak-Free Data Splitting:** Implemented `StratifiedGroupKFold` grouped by patient lesion ID (`lesion_id`). This guarantees that multiple images of the same lesion never cross between the training, validation, and test partitions.
-* **Architecture:** Utilized `convnext_small.fb_in22k_ft_in1k` pretrained via `timm` with custom dropout (`p=0.3`) for robust feature representation.
-* **Data Augmentation:** Configured an Albumentations pipeline including horizontal/vertical flips, 90-degree rotations, `ShiftScaleRotate`, and `ColorJitter`.
-* **Optimization & Regularization:**
-  * Label Smoothing Cross-Entropy Loss (`smoothing=0.1`) to prevent overconfident predictions.
-  * AdamW optimizer combined with a `CosineAnnealingLR` scheduler.
-  * Mixed-precision training via PyTorch AMP (`torch.amp.autocast` & `GradScaler`) for efficient GPU utilization.
-* **Inference Enhancement:** Implemented Test-Time Augmentation (TTA) using horizontal and vertical flips during final evaluation.
+- **Leak-Free Data Splitting:** Implemented `StratifiedGroupKFold` grouped by patient lesion ID (`lesion_id`). This guarantees that multiple images of the same lesion never cross between the training, validation, and test partitions.
+- **Architecture:** Utilized `convnext_small.fb_in22k_ft_in1k` pretrained via `timm` with custom dropout (`p=0.3`) for robust feature representation.
+- **Data Augmentation:** Configured an Albumentations pipeline including horizontal/vertical flips, 90-degree rotations, `ShiftScaleRotate`, and `ColorJitter`.
+- **Optimization & Regularization:**
+  - Label Smoothing Cross-Entropy Loss (`smoothing=0.1`) to prevent overconfident predictions.
+  - AdamW optimizer combined with a `CosineAnnealingLR` scheduler.
+  - Mixed-precision training via PyTorch AMP (`torch.amp.autocast` & `GradScaler`) for efficient GPU utilization.
+- **Inference Enhancement:** Implemented Test-Time Augmentation (TTA) using horizontal and vertical flips during final evaluation.
 
 ---
 
@@ -82,11 +82,12 @@ Dermatological condition diagnosis from skin lesion imagery often suffers from h
 
 ## 🛠️ Tech Stack & Requirements
 
-* **Language:** Python 3.10+
-* **Deep Learning Framework:** PyTorch, Torchvision
-* **Model Hub:** `timm` (PyTorch Image Models)
-* **Image Processing & Augmentation:** Albumentations, OpenCV
-* **Data Handling & Metrics:** NumPy, Pandas, Scikit-learn
+- **Language:** Python 3.10+
+- **Deep Learning Framework:** PyTorch, Torchvision
+- **Model Hub:** `timm` (PyTorch Image Models)
+- **Image Processing & Augmentation:** Albumentations, OpenCV
+- **Data Handling & Metrics:** NumPy, Pandas, Scikit-learn
+- **Hardware:** NVIDIA GPU with CUDA support recommended for training
 
 ## 📂 Repository Structure
 
@@ -100,13 +101,61 @@ Dermatological condition diagnosis from skin lesion imagery often suffers from h
 └── README.md
 ```
 
-## Datasets 
-```
-https://share.google/BKuGoG9tJ6k4HAIBd
-```
+---
 
-### Setup & Installation
+## 🚀 Setup & Installation
+
+### 1. Clone the Repository
 
 ```bash
-pip install torch torchvision timm albumentations opencv-python pandas numpy scikit-learn
+git clone [https://github.com/sahaanurag207-oss/SKIN-DISEASE-CLASSIFICATION-FROM-IMAGES.git](https://github.com/sahaanurag207-oss/SKIN-DISEASE-CLASSIFICATION-FROM-IMAGES.git)
+cd SKIN-DISEASE-CLASSIFICATION-FROM-IMAGES
+```
+
+### 2. Create a Virtual Environment (Recommended)
+
+Using `venv`:
+```bash
+python -m venv venv
+
+# Activate on Windows:
+venv\Scripts\activate
+
+# Activate on Linux / macOS:
+source venv/bin/activate
+```
+
+Or using `conda`:
+```bash
+conda create -n skin-disease python=3.10 -y
+conda activate skin-disease
+```
+
+### 3. Install PyTorch (with CUDA Support)
+
+Install PyTorch matching your system's CUDA version from the [official PyTorch website](https://pytorch.org/get-started/locally/). For example, for CUDA 12.1:
+
+```bash
+pip install torch torchvision --index-url [https://download.pytorch.org/whl/cu121](https://download.pytorch.org/whl/cu121)
+```
+
+*(For CPU-only execution, run `pip install torch torchvision`.)*
+
+### 4. Install Project Dependencies
+
+```bash
+pip install timm albumentations opencv-python pandas numpy scikit-learn matplotlib seaborn jupyter
+```
+
+### 5. Dataset Preparation
+
+1. Download the **HAM10000** dataset (`HAM10000_metadata.csv` and image folders `HAM10000_images_part_1` / `HAM10000_images_part_2`) from the [project dataset link](https://share.google/BKuGoG9tJ6k4HAIBd).
+2. Extract the archive into a local `data/` directory inside the repository root (or update the dataset path variable in the first configuration cell of `skin.ipynb`).
+
+### 6. Run the Notebook
+
+Launch Jupyter Notebook or JupyterLab and execute the cells sequentially:
+
+```bash
+jupyter notebook skin.ipynb
 ```
